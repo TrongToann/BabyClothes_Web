@@ -1,6 +1,6 @@
-﻿DROP database Project1
-create database Project1 
-use Project1
+﻿DROP database BabyShop
+create database BabyShop 
+use BabyShop
 
 CREATE TABLE tblRole(
 	role varchar(3) Primary key ,
@@ -8,8 +8,8 @@ CREATE TABLE tblRole(
 ) 
 
 CREATE TABLE tblAccount(
-	rID nvarchar(10) PRIMARY KEY NOT NULL,
-	userID varchar(255) NOT NULL,
+	rID nvarchar(10)  NOT NULL,
+	userID varchar(255) PRIMARY KEY NOT NULL, 
 	password varchar(255) NOT NULL,
 	fullName nvarchar(255) NOT NULL , 
 	role varchar(3) FOREIGN KEY REFERENCES tblRole(role) ,  
@@ -35,7 +35,7 @@ create table tblProduct (
 
 create table tblOrder(
 	orderID varchar(5) PRIMARY KEY , 
-	rID nvarchar(10) NOT NULL FOREIGN KEY REFERENCES tblAccount(rID) , 
+	userID varchar(255) NOT NULL FOREIGN KEY REFERENCES tblAccount(userID) ,  
 	total decimal(10) ,
 	order_Date [date] NOT NULL 
 )

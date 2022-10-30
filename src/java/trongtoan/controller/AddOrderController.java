@@ -30,8 +30,8 @@ public class AddOrderController extends HttpServlet {
             Cart cart = (Cart) session.getAttribute("CART");
             DAO dao = new DAO();
             UserDTO userLogin = (UserDTO) session.getAttribute("LOGIN_USER");
+            orderID = TrongToan.oID() ;
             boolean insertOrder = dao.insertOrder(TrongToan.oID(), userLogin.getrID(), total, java.sql.Date.valueOf(java.time.LocalDate.now()) );
-            orderID = dao.findOrderID(userLogin.getrID());
             for (Product detail : cart.getCart().values()) {
                 dao.insertOrderDetail(TrongToan.dID(), orderID, detail.getId(), detail.getPrice(), detail.getQuantity());
                 int newQuantity = dao.getQuantity(detail.getId()) - detail.getQuantity();

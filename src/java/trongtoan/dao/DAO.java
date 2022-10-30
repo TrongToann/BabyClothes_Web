@@ -20,11 +20,11 @@ public class DAO {
     private static final String GETLIST_CATEGORY = "SELECT cateID, name FROM tblCategory";
     private static final String GETLIST_ORDER = "SELECT orderID, rID, total, order_Date FROM tblOrder ";
     private static final String GETLIST_ORDERDETAIL = "SELECT detailID, orderID, productID, price, quantity FROM tblOrderDetail";
-    private static final String GETLAST_PRODUCT = "SELECT top 1 ID, name, image, price, title, description FROM tblProduct order by id desc";
-    private static final String GETPRODUCTBYCID = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE cateID = ? ";
-    private static final String GETPRODUCTBYID = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE ID = ? ";
-    private static final String SEARCH_PRODUCT = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE [name] like ? ";
-    private static final String SEARCH_ACCOUNT = "SELECT rID, userID, password, fullName, role FROM tblAccount WHERE fullName like ? ";
+    private static final String GETLAST_PRODUCT = "SELECT top 1 ID, name, image, price, title, description FROM tblProduct where status = 1 order by id desc ";
+    private static final String GETPRODUCTBYCID = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE cateID = ? AND status = 1 ";
+    private static final String GETPRODUCTBYID = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE ID = ? AND status = 1";
+    private static final String SEARCH_PRODUCT = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE [name] like ? AND status = 1 ";
+    private static final String SEARCH_ACCOUNT = "SELECT rID, userID, password, fullName, role FROM tblAccount WHERE fullName like ? AND status = 1 ";
     private static final String LOGIN = "SELECT rID,fullName, role FROM tblAccount WHERE userID=? AND password=? AND status = 1 ";
     private static final String CHECKID = "SELECT orderID from tblOrder WHERE orderID = ?";
     private static final String CHECKAID = "SELECT rID from tblAccount WHERE rID = ?";
@@ -84,7 +84,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECK_ACCOUNT_USERID);
                 ptm.setString(1, id);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     check = 1;
                 }
             }
@@ -217,7 +217,8 @@ public class DAO {
                 ptm = conn.prepareStatement(GETLIST_ORDER);
                 rs = ptm.executeQuery();
                 while (rs.next()) {
-                    list.add(new Order(rs.getString(1), rs.getString(2), rs.getInt(3)));
+                    Date date = rs.getDate("order_Date");
+                    list.add(new Order(rs.getString(1), rs.getString(2), rs.getInt(3), date)); 
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
@@ -275,7 +276,7 @@ public class DAO {
             if (conn != null) {
                 ptm = conn.prepareStatement(GETLAST_PRODUCT);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     p1 = new Product(rs.getString(1),
                             rs.getString(2),
                             rs.getString(3),
@@ -449,7 +450,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECKID);
                 ptm.setString(1, rID);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     temp = 1;
                 }
 
@@ -480,7 +481,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECK_DETAILID);
                 ptm.setString(1, dID);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     temp = 1;
                 }
 
@@ -511,7 +512,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECKAID);
                 ptm.setString(1, dID);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     temp = 1;
                 }
 
@@ -542,7 +543,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECK_PRODUCTID);
                 ptm.setInt(1, dID);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     temp = 1;
                 }
 
@@ -628,7 +629,7 @@ public class DAO {
                 ptm = conn.prepareStatement(FIND_ORDERID);
                 ptm.setString(1, rID);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     orderDetail = rs.getString("orderID");
                 }
             }
@@ -910,7 +911,7 @@ public class DAO {
                 ptm = conn.prepareStatement(CHECKOUT);
                 ptm.setString(1, id);
                 rs = ptm.executeQuery();
-                while (rs.next()) {
+                if (rs.next()) {
                     quantityDB = rs.getInt(1);
 
                 }
@@ -933,8 +934,11 @@ public class DAO {
     public static void main(String[] args) {
         try {
             DAO dao = new DAO();
-            int check = dao.getQuantity("1");
-            System.out.println(check);
+            List<Order> list = new ArrayList();
+            list = dao.getAllOrder() ; 
+            for (Order order : list) {
+                System.out.println(order.toString());
+            }
         } catch (SQLException e) {
         }
     }

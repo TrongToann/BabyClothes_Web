@@ -58,6 +58,7 @@
                             <th>S No.</th>
                             <th>Order ID</th>
                             <th>Account ID</th>
+                            <th>Date</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -73,6 +74,9 @@
                             </td> 
                             <td>
                                 <input type="text" name="rid" value="${order.rID}" readonly=""/>
+                            </td> 
+                            <td>
+                                <input type="text" name="rid" value="${order.order_Date}" readonly=""/>
                             </td> 
                             <td>
                                 <input type="text" name="total" value="${order.total} "  readonly=""/>

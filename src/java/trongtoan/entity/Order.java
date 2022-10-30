@@ -1,6 +1,8 @@
 
 package trongtoan.entity;
 
+import java.sql.Date;
+
 
 public class Order {
    private String orderID ; 
@@ -10,13 +12,15 @@ public class Order {
    private String productID ;  
    private int price ;  
    private int quantity ;  
+   private Date order_Date ;  
 
-    public Order(String orderID, String rID, int total) {
+    public Order(String orderID, String rID, int total, Date orderDate) {
         this.orderID = orderID;
         this.rID = rID;
         this.total = total;
+        this.order_Date = orderDate ;
     }
-
+    
     public Order(String detailID ,String orderID, String productID, int price, int quantity) {
         this.orderID = orderID;
         this.detailID = detailID;
@@ -81,10 +85,19 @@ public class Order {
         this.quantity = quantity;
     }
 
+    public Date getOrder_Date() {
+        return order_Date;
+    }
+
+    public void setOrder_Date(Date order_Date) {
+        this.order_Date = order_Date;
+    }
+
     @Override
     public String toString() {
-        return "Order{" + "orderID=" + orderID + ", rID=" + rID + ", total=" + total + ", detailID=" + detailID + ", productID=" + productID + ", price=" + price + ", quantity=" + quantity + '}';
+        return "Order{" + "orderID=" + orderID + ", rID=" + rID + ", total=" + total + ", detailID=" + detailID + ", productID=" + productID + ", price=" + price + ", quantity=" + quantity + ", order_Date=" + order_Date + '}';
     }
-   
+    
+    
    
 }
