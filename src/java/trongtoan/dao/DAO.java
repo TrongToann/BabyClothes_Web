@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.NamingException;
 import trongtoan.entity.Category;
 import trongtoan.entity.Order;
 import trongtoan.entity.Product;
@@ -18,7 +19,7 @@ public class DAO {
     private static final String GETLIST_PRODUCT = "SELECT id, name, image, price, title, description, quantity, cateID FROM tblProduct where status = 1 ";
     private static final String GETLIST_ACCOUNT = "SELECT rID, userID, fullName, role, password FROM tblAccount where status = 1 ";
     private static final String GETLIST_CATEGORY = "SELECT cateID, name FROM tblCategory";
-    private static final String GETLIST_ORDER = "SELECT orderID, rID, total, order_Date FROM tblOrder ";
+    private static final String GETLIST_ORDER = "SELECT orderID, userID, total, order_Date FROM tblOrder ";
     private static final String GETLIST_ORDERDETAIL = "SELECT detailID, orderID, productID, price, quantity FROM tblOrderDetail";
     private static final String GETLAST_PRODUCT = "SELECT top 1 ID, name, image, price, title, description FROM tblProduct where status = 1 order by id desc ";
     private static final String GETPRODUCTBYCID = "SELECT ID, name, image, price, title, description FROM tblProduct WHERE cateID = ? AND status = 1 ";
@@ -32,7 +33,7 @@ public class DAO {
     private static final String CHECK_DETAILID = "SELECT detailID from tblOrderDetail WHERE detailID = ?";
     private static final String CHECK_PRODUCTID = "SELECT ID from tblProduct WHERE ID = ?";
     private static final String FIND_ORDERID = "SELECT orderID from tblOrder WHERE rID = ?";
-    private static final String ADD_ORDER = "INSERT INTO tblOrder(orderID, rID , total, order_Date) VALUES (?,?,?,?) ";
+    private static final String ADD_ORDER = "INSERT INTO tblOrder(orderID, userID , total, order_Date) VALUES (?,?,?,?) ";
     private static final String ADD_ORDER_DETAIL = "INSERT INTO tblOrderDetail(detailID,orderID,productID,price,quantity) VALUES (?,?,?,?,?) ";
     private static final String UPDATE_PRODUCT = "UPDATE tblProduct SET ID =? , [name] = ? , [price] = ? , [title] = ? ,[quantity] = ? WHERE ID = ?";
     private static final String UPDATE_ACCOUNT = "UPDATE tblAccount SET rID =? , userID = ? , password = ? , fullName = ? , role = ? WHERE rID = ?";
@@ -45,7 +46,7 @@ public class DAO {
     private static final String ADD_ACCOUNT = "INSERT INTO tblAccount(rID,userID,password,fullName,role,status) VALUES (?,?,?,?,?,?)";
     private static final String CHECKOUT = "SELECT [quantity] FROM tblProduct WHERE ID = ? ";
 
-    public boolean addAccount(UserDTO user) throws SQLException {
+    public boolean addAccount(UserDTO user) throws SQLException, NamingException, ClassNotFoundException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -61,7 +62,7 @@ public class DAO {
                 ptm.setInt(6,1);
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -73,7 +74,7 @@ public class DAO {
         return check;
     }
 
-    public int checkDuplicate(String id) throws SQLException {
+    public int checkDuplicate(String id) throws SQLException, NamingException , ClassNotFoundException {
         int check = -1;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -88,7 +89,7 @@ public class DAO {
                     check = 1;
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -103,7 +104,7 @@ public class DAO {
         return check;
     }
 
-    public UserDTO checkLogin(String userID, String password) throws SQLException {
+    public UserDTO checkLogin(String userID, String password) throws SQLException, NamingException , ClassNotFoundException{
         UserDTO user = null;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -123,7 +124,7 @@ public class DAO {
                 }
             }
 
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -138,7 +139,7 @@ public class DAO {
         return user;
     }
 
-    public List<Product> getAllProduct() throws SQLException {
+    public List<Product> getAllProduct() throws SQLException, NamingException , ClassNotFoundException{
         List<Product> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -159,7 +160,7 @@ public class DAO {
                             rs.getInt(8)));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -175,7 +176,7 @@ public class DAO {
         return list;
     }
 
-    public List<Category> getAllCategory() throws SQLException {
+    public List<Category> getAllCategory() throws SQLException, NamingException , ClassNotFoundException{
         List<Category> listCC = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -190,7 +191,7 @@ public class DAO {
                             rs.getString(2)));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -206,7 +207,7 @@ public class DAO {
         return listCC;
     }
 
-    public List<Order> getAllOrder() throws SQLException {
+    public List<Order> getAllOrder() throws SQLException, NamingException , ClassNotFoundException{
         List<Order> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -221,7 +222,7 @@ public class DAO {
                     list.add(new Order(rs.getString(1), rs.getString(2), rs.getInt(3), date)); 
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -236,7 +237,7 @@ public class DAO {
         return list;
     }
 
-    public List<Order> getAllOrderDetail() throws SQLException {
+    public List<Order> getAllOrderDetail() throws SQLException, NamingException , ClassNotFoundException{
         List<Order> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -250,7 +251,7 @@ public class DAO {
                     list.add(new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -266,7 +267,7 @@ public class DAO {
         return list;
     }
 
-    public Product getLasted() throws SQLException {
+    public Product getLasted() throws SQLException, NamingException , ClassNotFoundException{
         Product p1 = new Product();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -285,7 +286,7 @@ public class DAO {
                             rs.getString(6));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -300,7 +301,7 @@ public class DAO {
         return p1;
     }
 
-    public List<Product> getProductByCID(String cid) throws SQLException {
+    public List<Product> getProductByCID(String cid) throws SQLException, NamingException , ClassNotFoundException{
         List<Product> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -320,7 +321,7 @@ public class DAO {
                             rs.getString(6)));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -336,7 +337,7 @@ public class DAO {
         return list;
     }
 
-    public Product getProductByID(String cid) throws SQLException {
+    public Product getProductByID(String cid) throws SQLException, NamingException , ClassNotFoundException{
         Product p1 = new Product();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -356,7 +357,7 @@ public class DAO {
                             rs.getString(6));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -372,7 +373,7 @@ public class DAO {
         return p1;
     }
 
-    public List<Product> searchByName(String txtSearch) throws SQLException {
+    public List<Product> searchByName(String txtSearch) throws SQLException, NamingException, ClassNotFoundException {
         List<Product> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -392,7 +393,7 @@ public class DAO {
                             rs.getString(6)));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -407,7 +408,7 @@ public class DAO {
 
         return list;
     }
-     public List<UserDTO> searchAccountByName(String txtSearch) throws SQLException {
+     public List<UserDTO> searchAccountByName(String txtSearch) throws SQLException, NamingException , ClassNotFoundException{
         List<UserDTO> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -422,7 +423,7 @@ public class DAO {
                     list.add(new UserDTO(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)) ) ;
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (rs != null) {
@@ -439,7 +440,7 @@ public class DAO {
         return list;
     }
 
-    public int checkOrID(String rID) throws SQLException {
+    public int checkOrID(String rID) throws SQLException, NamingException , ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
@@ -455,7 +456,7 @@ public class DAO {
                 }
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -470,7 +471,7 @@ public class DAO {
         return temp;
     }
 
-    public int checkDID(String dID) throws SQLException {
+    public int checkDID(String dID) throws SQLException, NamingException , ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
@@ -486,7 +487,7 @@ public class DAO {
                 }
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -501,7 +502,7 @@ public class DAO {
         return temp;
     }
 
-    public int checkAID(String dID) throws SQLException {
+    public int checkAID(String dID) throws SQLException, NamingException , ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
@@ -517,7 +518,7 @@ public class DAO {
                 }
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -532,7 +533,7 @@ public class DAO {
         return temp;
     }
 
-    public int checkpID(int dID) throws SQLException {
+    public int checkpID(int dID) throws SQLException, NamingException , ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
@@ -548,7 +549,7 @@ public class DAO {
                 }
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -563,7 +564,7 @@ public class DAO {
         return temp;
     }
 
-    public boolean insertOrder(String orderID, String rID, String total, Date orderDate) throws SQLException {
+    public boolean insertOrder(String orderID, String rID, String total, Date orderDate) throws SQLException, NamingException, ClassNotFoundException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -577,7 +578,7 @@ public class DAO {
                 ptm.setDate(4, (java.sql.Date) orderDate); 
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -590,7 +591,7 @@ public class DAO {
         return check;
     }
 
-    public boolean insertOrderDetail(String detailID, String orderID, String productID, double price, int quantity) throws SQLException {
+    public boolean insertOrderDetail(String detailID, String orderID, String productID, double price, int quantity) throws SQLException, NamingException, ClassNotFoundException {
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -605,7 +606,7 @@ public class DAO {
                 ptm.setInt(5, quantity);
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -618,7 +619,7 @@ public class DAO {
         return check;
     }
 
-    public String findOrderID(String rID) throws SQLException {
+    public String findOrderID(String rID) throws SQLException, NamingException , ClassNotFoundException{
         String orderDetail = null;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -633,7 +634,7 @@ public class DAO {
                     orderDetail = rs.getString("orderID");
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -648,7 +649,7 @@ public class DAO {
         return orderDetail;
     }
 
-    public boolean updateProduct(Product product) throws SQLException {
+    public boolean updateProduct(Product product) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -664,7 +665,7 @@ public class DAO {
                 ptm.setString(6, product.getId());
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -676,7 +677,7 @@ public class DAO {
         return check;
     }
 
-    public boolean deleteProduct(int id) throws SQLException {
+    public boolean deleteProduct(int id) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -697,7 +698,7 @@ public class DAO {
                 }
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -712,7 +713,7 @@ public class DAO {
         return check;
     }
 
-    public boolean createProduct(Product product) throws SQLException {
+    public boolean createProduct(Product product) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -732,7 +733,7 @@ public class DAO {
                 
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -745,7 +746,7 @@ public class DAO {
         return check;
     }
 
-    public List<UserDTO> getAllAccount() throws SQLException {
+    public List<UserDTO> getAllAccount() throws SQLException, NamingException , ClassNotFoundException{
         List<UserDTO> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -764,7 +765,7 @@ public class DAO {
                     ));
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -780,7 +781,7 @@ public class DAO {
         return list;
     }
 
-    public boolean updateAccount(UserDTO user) throws SQLException {
+    public boolean updateAccount(UserDTO user) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -796,7 +797,7 @@ public class DAO {
                 ptm.setString(6, user.getrID());
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm != null) {
                 ptm.close();
@@ -808,7 +809,7 @@ public class DAO {
         return check;
     }
 
-    public boolean deleteAccount(String id) throws SQLException {
+    public boolean deleteAccount(String id) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -821,7 +822,7 @@ public class DAO {
 
                 check = ptm.executeUpdate() > 0 ? true : false;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm1 != null) {
                 ptm1.close();
@@ -836,7 +837,7 @@ public class DAO {
         return check;
     }
 
-    public boolean deleteOrder(String orderID) throws SQLException {
+    public boolean deleteOrder(String orderID) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -852,7 +853,7 @@ public class DAO {
                 check = ptm.executeUpdate() > 0 ? true : false;
 
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (ptm1 != null) {
                 ptm1.close();
@@ -867,7 +868,7 @@ public class DAO {
         return check;
     }
 
-    public boolean checkOut(String id, int quantity) throws SQLException {
+    public boolean checkOut(String id, int quantity) throws SQLException, NamingException , ClassNotFoundException{
         boolean check = false;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -885,7 +886,7 @@ public class DAO {
                     }
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -900,7 +901,7 @@ public class DAO {
         return check;
     }
 
-    public int getQuantity(String id) throws SQLException {
+    public int getQuantity(String id) throws SQLException, NamingException , ClassNotFoundException{
         int quantityDB = 0;
         Connection conn = null;
         PreparedStatement ptm = null;
@@ -916,7 +917,7 @@ public class DAO {
 
                 }
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
         } finally {
             if (rs != null) {
                 rs.close();
@@ -931,7 +932,7 @@ public class DAO {
         return quantityDB;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NamingException , ClassNotFoundException{
         try {
             DAO dao = new DAO();
             List<Order> list = new ArrayList();

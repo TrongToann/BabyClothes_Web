@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +39,7 @@ public class TrongToan {
         sendEmail.send(request.getParameter("email"), subject, message, "toanntse161325@fpt.edu.vn", "nguyentrongtoan");
     }
 
-    public static String oID() throws SQLException {
+    public static String oID() throws SQLException, NamingException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String rIDD = null;
@@ -75,7 +76,7 @@ public class TrongToan {
         } while (pos != -1);
         return rIDD;
     }
-    public static String pID() throws SQLException {
+    public static String pID() throws SQLException, NamingException, ClassNotFoundException {
         int so = 1;
         int pos = 0;
         String rID ; 
@@ -92,7 +93,7 @@ public class TrongToan {
         return rID;
     }
 
-    public static String dID() throws SQLException {
+    public static String dID() throws SQLException, NamingException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String rIDD = null;
@@ -129,7 +130,7 @@ public class TrongToan {
         } while (pos != -1);
         return rIDD;
     }
-    public static String aID(String x) throws SQLException {
+    public static String aID(String x) throws SQLException, NamingException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String aIDD = null;

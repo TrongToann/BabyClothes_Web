@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class AdminHomeController extends HttpServlet {
     private static final String SUCCESS = "adminPage.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+            throws ServletException, IOException, SQLException, NamingException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
@@ -63,6 +64,10 @@ public class AdminHomeController extends HttpServlet {
             processRequest(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -80,6 +85,10 @@ public class AdminHomeController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
+            Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(AdminHomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -127,6 +127,6 @@ SELECT * FROM tblRole
 SELECT * FROM tblAccount
 SELECT * FROM tblOrder 
 SELECT * FROM tblOrderDetail
-SELECT top 1 * FROM tblProduct 
-order by id desc
+SELECT top 1 orderID FROM tblOrder 
+order by orderID desc
 SELECT orderID, rID, total, order_Date FROM tblOrder

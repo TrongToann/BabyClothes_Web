@@ -3,6 +3,9 @@ package trongtoan.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +23,7 @@ public class AddOrderController extends HttpServlet {
     private static final String SUCCESS = "viewCart.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NamingException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
@@ -31,7 +34,7 @@ public class AddOrderController extends HttpServlet {
             DAO dao = new DAO();
             UserDTO userLogin = (UserDTO) session.getAttribute("LOGIN_USER");
             orderID = TrongToan.oID() ;
-            boolean insertOrder = dao.insertOrder(TrongToan.oID(), userLogin.getrID(), total, java.sql.Date.valueOf(java.time.LocalDate.now()) );
+            boolean insertOrder = dao.insertOrder(TrongToan.oID(), userLogin.getUserID(), total, java.sql.Date.valueOf(java.time.LocalDate.now()) );
             for (Product detail : cart.getCart().values()) {
                 dao.insertOrderDetail(TrongToan.dID(), orderID, detail.getId(), detail.getPrice(), detail.getQuantity());
                 int newQuantity = dao.getQuantity(detail.getId()) - detail.getQuantity();
@@ -66,7 +69,13 @@ public class AddOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (NamingException ex) {
+            Logger.getLogger(AddOrderController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddOrderController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -80,7 +89,13 @@ public class AddOrderController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (NamingException ex) {
+            Logger.getLogger(AddOrderController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddOrderController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

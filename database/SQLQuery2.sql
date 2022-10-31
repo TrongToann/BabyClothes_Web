@@ -130,3 +130,4 @@ SELECT * FROM tblOrderDetail
 SELECT top 1 * FROM tblProduct 
 order by id desc
 SELECT orderID, rID, total, order_Date FROM tblOrder
+SELECT top 1 ID, name, image, price, title, description FROM tblProduct where status = 1 order by id desc 
