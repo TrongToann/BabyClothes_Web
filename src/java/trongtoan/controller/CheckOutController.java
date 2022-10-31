@@ -2,7 +2,6 @@ package trongtoan.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -30,7 +29,6 @@ public class CheckOutController extends HttpServlet {
             Cart cart = (Cart) session.getAttribute("CART") ;
             
             DAO dao = new DAO() ; 
-            List<Product> list = dao.getAllProduct() ;
             
             for (Product check : cart.getCart().values()) {
                 if(dao.checkOut(check.getId(), check.getQuantity())) {
