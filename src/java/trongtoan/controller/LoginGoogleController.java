@@ -30,7 +30,7 @@ public class LoginGoogleController extends HttpServlet {
     private static final String SUCCESS = "checkRole";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException, NamingException, ClassNotFoundException {
+            throws ServletException, IOException, SQLException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
@@ -40,13 +40,23 @@ public class LoginGoogleController extends HttpServlet {
             String accessToken = TrongToan.getToken(code); 
             LoginGoogleDTO user = TrongToan.getUserInfo(accessToken); 
             DAO dao = new DAO();
-            UserDTO userNew = dao.checkLogin(user.getId(), user.getId());
+            UserDTO userNew = null;
+            try {
+                userNew = dao.checkLogin(user.getId(), user.getId());
+            } catch (NamingException ex) {
+                Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (userNew != null) { 
                 session.setAttribute("LOGIN_USER", userNew);  
                 url = SUCCESS;
             } else {
                 UserDTO addUser = new UserDTO(TrongToan.aID("US"), user.getId(), user.getName(), "US", user.getId()); 
-                boolean check = dao.addAccount(addUser);
+                boolean check = false;
+                try {
+                    check = dao.addAccount(addUser);
+                } catch (NamingException ex) {
+                    Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 if (check) {
                     session.setAttribute("LOGIN_USER", addUser);  
                     url = SUCCESS;
@@ -78,8 +88,6 @@ public class LoginGoogleController extends HttpServlet {
             processRequest(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,8 +107,6 @@ public class LoginGoogleController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
             Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginGoogleController.class.getName()).log(Level.SEVERE, null, ex);

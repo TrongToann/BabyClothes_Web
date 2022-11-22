@@ -14,11 +14,11 @@ public class DBUtils {
     public static Connection getConnection1() throws SQLException, ClassNotFoundException {
         Connection conn = null ; 
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver") ;
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=Project1" ; 
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=BabyShop" ; 
         conn = DriverManager.getConnection(url, "sa" , "sa123456") ;
         return conn ; 
     }
-    public static Connection getConnection() throws NamingException, SQLException {
+    public static Connection getConnection() throws  SQLException, NamingException {
         Connection conn = null ; 
         Context context = new InitialContext() ; 
         Context end = (Context) context.lookup("java:comp/env") ;  

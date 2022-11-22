@@ -3,6 +3,7 @@ package trongtoan.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.naming.NamingException;
@@ -36,10 +37,10 @@ public class TrongToan {
                 + "</body>\n"
                 + "\n"
                 + "</html>";
-        sendEmail.send(request.getParameter("email"), subject, message, "toanntse161325@fpt.edu.vn", "nguyentrongtoan");
+        sendEmail.send("toanntse161325@fpt.edu.vn", subject, message, "ebutlercomp@gmail.com", "toiyeufpt");
     }
 
-    public static String oID() throws SQLException, NamingException, ClassNotFoundException {
+    public static String oID() throws SQLException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String rIDD = null;
@@ -76,7 +77,7 @@ public class TrongToan {
         } while (pos != -1);
         return rIDD;
     }
-    public static String pID() throws SQLException, NamingException, ClassNotFoundException {
+    public static String pID() throws SQLException, ClassNotFoundException {
         int so = 1;
         int pos = 0;
         String rID ; 
@@ -93,7 +94,7 @@ public class TrongToan {
         return rID;
     }
 
-    public static String dID() throws SQLException, NamingException, ClassNotFoundException {
+    public static String dID() throws SQLException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String rIDD = null;
@@ -130,7 +131,7 @@ public class TrongToan {
         } while (pos != -1);
         return rIDD;
     }
-    public static String aID(String x) throws SQLException, NamingException, ClassNotFoundException {
+    public static String aID(String x) throws SQLException, ClassNotFoundException {
         String chu = null;
         int so = 1;
         String aIDD = null;
@@ -224,4 +225,5 @@ public class TrongToan {
 
         return googlePojo;
     }
+    
 }

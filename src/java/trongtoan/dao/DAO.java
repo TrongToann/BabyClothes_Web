@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import trongtoan.entity.Category;
 import trongtoan.entity.Order;
 import trongtoan.entity.Product;
+import trongtoan.entity.TrongToan;
 import trongtoan.entity.UserDTO;
 import trongtoan.utils.DBUtils;
 
@@ -440,13 +441,13 @@ public class DAO {
         return list;
     }
 
-    public int checkOrID(String rID) throws SQLException, NamingException , ClassNotFoundException{
+    public int checkOrID(String rID) throws SQLException, ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
         int temp = -1;
         try {
-            conn = DBUtils.getConnection();
+            conn = DBUtils.getConnection1();
             if (conn != null) {
                 ptm = conn.prepareStatement(CHECKID);
                 ptm.setString(1, rID);
@@ -471,13 +472,13 @@ public class DAO {
         return temp;
     }
 
-    public int checkDID(String dID) throws SQLException, NamingException , ClassNotFoundException{
+    public int checkDID(String dID) throws SQLException , ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
         int temp = -1;
         try {
-            conn = DBUtils.getConnection();
+            conn = DBUtils.getConnection1();
             if (conn != null) {
                 ptm = conn.prepareStatement(CHECK_DETAILID);
                 ptm.setString(1, dID);
@@ -502,13 +503,13 @@ public class DAO {
         return temp;
     }
 
-    public int checkAID(String dID) throws SQLException, NamingException , ClassNotFoundException{
+    public int checkAID(String dID) throws SQLException, ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
         int temp = -1;
         try {
-            conn = DBUtils.getConnection();
+            conn = DBUtils.getConnection1();
             if (conn != null) {
                 ptm = conn.prepareStatement(CHECKAID);
                 ptm.setString(1, dID);
@@ -533,13 +534,13 @@ public class DAO {
         return temp;
     }
 
-    public int checkpID(int dID) throws SQLException, NamingException , ClassNotFoundException{
+    public int checkpID(int dID) throws SQLException, ClassNotFoundException{
         Connection conn = null;
         PreparedStatement ptm = null;
         ResultSet rs = null;
         int temp = -1;
         try {
-            conn = DBUtils.getConnection();
+            conn = DBUtils.getConnection1();
             if (conn != null) {
                 ptm = conn.prepareStatement(CHECK_PRODUCTID);
                 ptm.setInt(1, dID);
@@ -718,7 +719,7 @@ public class DAO {
         Connection conn = null;
         PreparedStatement ptm = null;
         try {
-            conn = DBUtils.getConnection();
+            conn = DBUtils.getConnection1();
             if (conn != null) {
                 ptm = conn.prepareStatement(CREATE_PRODUCT);
                 ptm.setString(1, product.getId());
@@ -932,15 +933,16 @@ public class DAO {
         return quantityDB;
     }
 
-    public static void main(String[] args) throws NamingException , ClassNotFoundException{
+    public static void main(String[] args) {
         try {
             DAO dao = new DAO();
-            List<Order> list = new ArrayList();
-            list = dao.getAllOrder() ; 
-            for (Order order : list) {
-                System.out.println(order.toString());
-            }
-        } catch (SQLException e) {
+            Product p1 = new Product(TrongToan.pID(), "aaa", "1", 150000, "aaa",1, "aaaa");
+            boolean createProduct = dao.createProduct(p1);
+            System.out.println(createProduct);
+        } catch (Exception e) {
         }
+    
+        
+       
     }
 }
